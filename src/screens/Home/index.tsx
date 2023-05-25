@@ -1,10 +1,30 @@
-import { Text, TextInput, TouchableOpacity, View } from 'react-native'
+import {
+  FlatList,
+  ScrollView,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 import { styles } from './styles'
 import { Participant } from '../../components/Participant'
+import { useState } from 'react'
 
 export function Home() {
-  function handleParticipantAdd() {
-    console.log('Adicionando participante')
+  const [name, setName] = useState('')
+  const [participants, setParticipants] = useState([
+    'Gabriel Pires',
+    'Rodrigo Gonçalves',
+    'Diego Fernandes',
+  ])
+
+  function handleParticipantAdd(name: string) {
+    setParticipants((prev) => prev.concat(name))
+    setName('')
+  }
+
+  function handleParticipantRemove(index: number) {
+    setParticipants((prev) => prev.filter((_, i) => i !== index))
   }
 
   return (
@@ -17,20 +37,37 @@ export function Home() {
           style={styles.input}
           placeholder={'Nome do participante'}
           placeholderTextColor={'#6b6b6b'}
+          value={name}
+          onChangeText={setName}
         />
 
         <TouchableOpacity
           style={styles.button}
           activeOpacity={0.7}
-          onPress={handleParticipantAdd}
+          onPress={() => handleParticipantAdd(name)}
         >
           <Text style={styles.buttonText}>+</Text>
         </TouchableOpacity>
       </View>
 
-      <Participant name="Gabriel Pires" />
-      <Participant name="Gabriel Pires" />
-      <Participant name="Gabriel Pires" />
+      <FlatList
+        data={participants}
+        keyExtractor={(item) => item}
+        showsVerticalScrollIndicator={false}
+        renderItem={({ index, item }) => (
+          <Participant
+            key={item}
+            name={item}
+            onRemove={() => handleParticipantRemove(index)}
+          />
+        )}
+        ListEmptyComponent={() => (
+          <Text style={styles.listEmptyText}>
+            Ninguém chegou no evento ainda? Adicione participantes a sua lista
+            de presença
+          </Text>
+        )}
+      />
     </View>
   )
 }
