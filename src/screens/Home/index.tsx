@@ -1,4 +1,5 @@
 import {
+  Alert,
   FlatList,
   ScrollView,
   Text,
@@ -19,6 +20,15 @@ export function Home() {
   ])
 
   function handleParticipantAdd(name: string) {
+    if (!name) {
+      return Alert.alert('Ops!', 'Você precisa informar o nome do participante')
+    }
+
+    if (participants.includes(name)) {
+      setName('')
+      return Alert.alert('Ops!', 'Esse participante já está na lista')
+    }
+
     setParticipants((prev) => prev.concat(name))
     setName('')
   }
