@@ -13,11 +13,7 @@ import { useState } from 'react'
 
 export function Home() {
   const [name, setName] = useState('')
-  const [participants, setParticipants] = useState([
-    'Gabriel Pires',
-    'Rodrigo Gonçalves',
-    'Diego Fernandes',
-  ])
+  const [participants, setParticipants] = useState<string[]>([])
 
   function handleParticipantAdd(name: string) {
     if (!name) {
@@ -34,7 +30,20 @@ export function Home() {
   }
 
   function handleParticipantRemove(index: number) {
-    setParticipants((prev) => prev.filter((_, i) => i !== index))
+    Alert.alert(
+      'Atenção!',
+      'Você tem certeza que deseja remover esse participante?',
+      [
+        {
+          text: 'Não',
+        },
+        {
+          text: 'Sim',
+          onPress: () =>
+            setParticipants((prev) => prev.filter((_, i) => i !== index)),
+        },
+      ],
+    )
   }
 
   return (
